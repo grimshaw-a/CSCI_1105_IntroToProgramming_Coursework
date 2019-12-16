@@ -1,3 +1,7 @@
+// Author: Adam Grimshaw
+// Date: December 16, 2019
+// Course: CSCI 1105 Intro to Programming
+
 import java.util.Scanner;
 
 public class InterestCalculator {
