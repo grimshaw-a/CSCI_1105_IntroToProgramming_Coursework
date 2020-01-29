@@ -32,17 +32,18 @@ class PayrollCalculator {
 			double grossIncome = hoursWorked * payRate;
 			double fedMoney = grossIncome * fedTax;
 			double stateMoney = grossIncome * stateTax;
-			double totalDeduction = fedTax + stateTax;
+			double totalDeduction = fedMoney + stateMoney;
 			double netPay = grossIncome - totalDeduction;
 			
 			// Print results.
 			System.out.println("Employee Name: " + empName);
 			System.out.println("Hours Worked: " + hoursWorked);
 			System.out.printf("Pay Rate: $%.2f \n", (payRate * 100) / 100);
+			System.out.printf("Gross Pay $%.2f \n", (grossIncome * 100) / 100);
 			System.out.println("Deductions:");
 			System.out.printf("\t Federal Withholding (%.1f%%): $%.2f\n", (fedTax * 100), ((fedMoney * 100) / 100));
 			System.out.printf("\t State Withholding (%.1f%%): $%.2f\n", (stateTax * 100), ((stateMoney * 100) / 100));
-			System.out.printf("\t Total Deduction: $%.2f\n", (Math.rint(totalDeduction)));
+			System.out.printf("\t Total Deduction: $%.2f\n", ((Math.rint(totalDeduction * 100) / 100)));
 			System.out.printf("Net Pay: $%.2f", netPay);
 		}
 	}
