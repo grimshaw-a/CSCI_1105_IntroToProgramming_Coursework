@@ -14,11 +14,16 @@ public class GuessWho {
 		Scanner input = new Scanner(System.in);
 		
 		// Array of all characters and their attributes.
-		String[][] characterArray = {{"TOM", "brown", "He", "hat", "glasses", "beard"}, 
-				{"SALLY", "blonde", "She", "no", "no", "no"},
-				{"JO", "red", "She", "hat", "glasses", "no"},
-				{"HARRY", "brown", "He", "no", "glasses", "beard"},
-				{"MARIA", "black", "She", "hat", "no", "no"}};
+		String[][] characterArray = {{"TOM", "brown", "He", "hat", "glasses", "beard", "false"}, 
+				{"SALLY", "blonde", "She", "no", "no", "no", "false"},
+				{"JO", "red", "She", "hat", "glasses", "no", "false"},
+				{"HARRY", "brown", "He", "no", "glasses", "beard", "false"},
+				{"MARIA", "black", "She", "hat", "no", "no", "false"},
+				{"STANLEY", "black", "He", "no", "no", "no", "false"},
+				{"FRED", "brown", "He", "hat", "no", "no", "false"},
+				{"KARL", "black", "He", "no", "glasses", "no", "false"},
+				{"JOYCE", "brown", "She", "no", "no", "no", "false"},
+				{"ANTON", "red", "He", "no", "no", "beard", "false"}};
 		
 		// Arrays to keep track of user and computer progress.
 		String[][] userArray = new String[characterArray.length][characterArray[0].length];
@@ -30,28 +35,40 @@ public class GuessWho {
 			}
 		}
 		
-		// Test to make sure shuffle works.
-		//System.out.println(shuffleArray(characterArray)[0][0]);
-		
 		// Initialize the game.
 		shuffleArray(characterArray);
 		String[] userCharacter = characterArray[0];
 		String[] computerCharacter = characterArray[1];
+		String userQuestion = "";
 		printInstructions();
-		printAllRemainingCharacters(characterArray);
 		printUserCharacter(characterArray[0]);
 		
-		String userQuestion = "MAN?";
+		// Dev cheat
+		//System.out.println("The computer's character is " + computerCharacter[0]);
 		
-		//removeCharacters("He", userArray, 2, true);
-		checkAnswer(characterArray, userQuestion);
+		// Loop the game until finished.
+		while(characterArray[1][6].equals("false")) {
+			userTurn(characterArray);
+		}
+	}
+	
+	/** Runs the computer's turn */
+	public static void computerTurn() {
+		Scanner input = new Scanner(System.in);
+		boolean turnComplete = false;
 		
-		//if (checkAnswer(userArray[1], userQuestion)) {
-		//	for (int i = 0; i< userArray.length; i++) {
-				
-		//	}
-		//}
-		
+	}
+	
+	/** Runs the user's turn.*/
+	public static void userTurn(String[][] array) {
+		Scanner input = new Scanner(System.in);
+		boolean turnComplete = false;
+		printAllRemainingCharacters(array);
+		while(turnComplete == false) {
+			System.out.print("Your turn. Enter a question: ");
+			String question = input.nextLine();
+			turnComplete = checkAnswer(array, question.toUpperCase());
+		}
 	}
 	
 	/** Creates a random variable and swaps array elements to randomize their order.*/
@@ -67,15 +84,15 @@ public class GuessWho {
 
 	/** Prints out instructions for how to play the game.*/
 	public static void printInstructions() {
-		System.out.print("WELCOME TO \"GUESS WHO?\"\n\nYou and the computer will each be "
+		System.out.print("WELCOME TO \"GUESS WHO?\"\n-----------------------\nYou and the computer will each be "
 					+ "assigned a character. The goal is to guess the computer's character before "
 					+ "it guesses yours.\nYou will be given the name and attributes of your "
 					+ "character. Answer the computer's questions by typing either \"YES\" or "
 					+ "\"NO\".\n\nTo ask the computer a question, type one of the "
 					+ "following:\n\"MAN?\", \"WOMAN?\", \"BROWN HAIR?\", \"BLONDE HAIR?\", "
 					+ "\"BLACK HAIR?\", \"RED HAIR?\", \"GLASSES?\", \"HAT?\", \"BEARD?\", or "
-					+ "\"(NAME OF CHARACTER)\"\n\n"
-					+ "The computer will go first. HAVE FUN!\n\n");
+					+ "\"(NAME OF CHARACTER)?\"\n\n"
+					+ "The computer will go first. HAVE FUN!\n-------------------------------------\n\n");
 	}
 	
 	/** Prints out a list of all characters.*/
@@ -89,7 +106,12 @@ public class GuessWho {
 		Arrays.sort(alphaArray);
 		// Print out the remaining characters.
 		for(int i = 0; i < array.length; i++) {
-			System.out.print(alphaArray[i] + " ");
+			if (alphaArray[i].equals("")) {
+				// Do nothing
+			}
+			else {
+				System.out.print(alphaArray[i] + " ");
+			}
 		}
 		System.out.print("\n\n");
 	}
@@ -108,117 +130,143 @@ public class GuessWho {
 		if (array[5] == "beard") {
 			beard = "and has a beard.";
 		}
-		System.out.println("Your character is " + array[0] + ".");
-		System.out.println(array[2] + " has " + array[1] + " hair, " + hat + glasses + beard);
+		System.out.print("Your character is " + array[0] + ". ");
+		System.out.println(array[2] + " has " + array[1] + " hair, " + hat + glasses + beard + "\n");
 	}
 	
 	/** Removes characters from the board.*/
 	public static boolean checkAnswer(String[][] array, String question) {
+		if (question.equals(array[1][0] + "?")) {
+			System.out.println("You guessed correctly! The computer's character is " + array[1][0] + "!");
+			array[1][6] = "true";
+			return true;
+		}
+		else if (question.equals(array[2][0] + "?") || question.equals(array[3][0] + "?") || question.equals(array[4][0] + "?") || question.equals(array[5][0] + "?") || question.equals(array[6][0] + "?") || question.equals(array[7][0] + "?") || question.equals(array[8][0] + "?") || question.equals(array[9][0] + "?")) {
+			System.out.println("No");
+			// Removes "?" from string before feeding to removeCharacters method.
+			question = question.substring(0, question.length() - 1);
+			removeCharacters(question, array, 0, true);
+			return true;
+		}
 		switch (question) {
 		case "MAN?": 
-			if (array[1][2].equals("He")) {
-				System.out.print("Yes");
+			if (array[1][2].equalsIgnoreCase("He")) {
+				System.out.println("Yes");
+				removeCharacters("He", array, 2, false);
+				return true;
+			}
+			else if (array[1][2].equalsIgnoreCase("She")) {
+				System.out.println("No");
 				removeCharacters("He", array, 2, true);
 				return true;
 			}
-			else if (array[1][2].equals("She")) {
-				System.out.print("No");
-				return false;
-			}
 		case "WOMAN?": 
-			if (array[1][2] == "She") {
-				System.out.print("Yes");
+			if (array[1][2].equalsIgnoreCase("She")) {
+				System.out.println("Yes");
+				removeCharacters("She", array, 2, false);
 				return true;
 			}
-			else if (array[1][2] == "He") {
-				System.out.print("No");
-				return false;
+			else if (array[1][2].equalsIgnoreCase("He")) {
+				System.out.println("No");
+				removeCharacters("She", array, 2, true);
+				return true;
 			}
 		case "BROWN HAIR?": 
-			if (array[1][1] == "brown") {
-				System.out.print("Yes");
+			if (array[1][1].equalsIgnoreCase("brown")) {
+				System.out.println("Yes");
+				removeCharacters("brown", array, 1, false);
 				return true;
 			}
-			else if (array[1][1] == "blonde" || array[1][1] == "red" || array[1][1] == "black") {
-				System.out.print("No");
-				return false;
+			else if (array[1][1].equalsIgnoreCase("blonde") || array[1][1].equalsIgnoreCase("red") || array[1][1].equalsIgnoreCase("black")) {
+				System.out.println("No");
+				removeCharacters("brown", array, 1, true);
+				return true;
 			}
 		case "BLONDE HAIR?": 
-			if (array[1][1] == "blonde") {
-				System.out.print("Yes");
+			if (array[1][1].equalsIgnoreCase("blonde")) {
+				System.out.println("Yes");
+				removeCharacters("blonde", array, 1, false);
 				return true;
 			}
-			else if (array[1][1] == "brown" || array[1][1] == "red" || array[1][1] == "black") {
-				System.out.print("No");
+			else if (array[1][1].equalsIgnoreCase("brown") || array[1][1].equalsIgnoreCase("red") || array[1][1].equalsIgnoreCase("black")) {
+				System.out.println("No");
+				removeCharacters("blonde", array, 1, true);
 				return false;
 			}
 		case "BLACK HAIR?": 
-			if (array[1][1] == "black") {
-				System.out.print("Yes");
+			if (array[1][1].equalsIgnoreCase("black")) {
+				System.out.println("Yes");
+				removeCharacters("black", array, 1, false);
 				return true;
 			}
-			else if (array[1][1] == "blonde" || array[1][1] == "red" || array[1][1] == "brown") {
-				System.out.print("No");
-				return false;
+			else if (array[1][1].equalsIgnoreCase("blonde") || array[1][1].equalsIgnoreCase("red") || array[1][1].equalsIgnoreCase("brown")) {
+				System.out.println("No");
+				removeCharacters("black", array, 1, true);
+				return true;
 			}
 		case "RED HAIR?": 
-			if (array[1][1] == "red") {
-				System.out.print("Yes");
+			if (array[1][1].equalsIgnoreCase("red")) {
+				System.out.println("Yes");
+				removeCharacters("red", array, 1, false);
 				return true;
 			}
-			else if (array[1][1] == "blonde" || array[1][1] == "brown" || array[1][1] == "black") {
-				System.out.print("No");
-				return false;
+			else if (array[1][1].equalsIgnoreCase("blonde") || array[1][1].equalsIgnoreCase("brown") || array[1][1].equalsIgnoreCase("black")) {
+				System.out.println("No");
+				removeCharacters("red", array, 1, true);
+				return true;
 			}
 		case "GLASSES?": 
-			if (array[1][4] == "glasses") {
-				System.out.print("Yes");
+			if (array[1][4].equalsIgnoreCase("glasses")) {
+				System.out.println("Yes");
+				removeCharacters("glasses", array, 4, false);
 				return true;
 			}
-			else if (array[1][4] == "no") {
-				System.out.print("No");
+			else if (array[1][4].equalsIgnoreCase("no")) {
+				System.out.println("No");
+				removeCharacters("glasses", array, 4, true);
 				return false;
 			}
 		case "HAT?": 
-			if (array[1][3] == "hat") {
-				System.out.print("Yes");
+			if (array[1][3].equalsIgnoreCase("hat")) {
+				System.out.println("Yes");
+				removeCharacters("hat", array, 3, false);
 				return true;
 			}
-			else if (array[1][3] == "no") {
-				System.out.print("No");
+			else if (array[1][3].equalsIgnoreCase("no")) {
+				System.out.println("No");
+				removeCharacters("hat", array, 3, true);
 				return false;
 			}
 		case "BEARD?": 
-			if (array[1][5] == "beard") {
-				System.out.print("Yes");
+			if (array[1][5].equalsIgnoreCase("beard")) {
+				System.out.println("Yes");
+				removeCharacters("beard", array, 5, false);
 				return true;
 			}
-			else if (array[1][5] == "no") {
-				System.out.print("No");
+			else if (array[1][5].equalsIgnoreCase("no")) {
+				System.out.println("No");
+				removeCharacters("beard", array, 5, true);
 				return false;
 			}
+		case "INSTRUCTIONS":
+			printInstructions();
+			return false;
+			
+		case "HELP":
+			printInstructions();
+			return false;
 		}
-		System.out.print("Invalid input. Please try again.");
+		System.out.println("Invalid input. Please try again.");
 		return false;
 	}
 	
 	/** Removes characters from user/computer array.*/
 	public static void removeCharacters(String attribute, String[][] array, int arrayIndex, boolean bool) {
-		//System.out.println(array[0][arrayIndex]);
 		for(int i = 0; i < array.length; i++) {
-			if(array[i][arrayIndex].equals(attribute) == false) {
-				System.out.println(array[i][arrayIndex]);
-				array[i][0] = "";
-			}
-			else if (array[i][arrayIndex].equals(attribute) == false) {
-				System.out.println(array[i][arrayIndex]);
+			if(array[i][arrayIndex].equals(attribute) == bool) {
 				array[i][0] = "";
 			}
 		}
-		printAllRemainingCharacters(array);
-	}
-	/** The computer makes a guess and updates its list of characters.*/
-	public static void computerTurn() {
-		
+		System.out.println();
 	}
 }
