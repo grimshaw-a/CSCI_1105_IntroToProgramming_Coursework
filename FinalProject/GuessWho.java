@@ -7,23 +7,59 @@
 
 import java.util.Scanner;
 import java.util.Arrays;
+import java.util.jar.*;
 
 public class GuessWho {
+
+	static boolean endGame = false;
 
 	public static void main(String[] args) {
 		Scanner input = new Scanner(System.in);
 		
+		// STARTING VALUES----------------------------------------------------------------------
+		
 		// Array of all characters and their attributes.
-		String[][] characterArray = {{"TOM", "brown", "He", "hat", "glasses", "beard", "false"}, 
-				{"SALLY", "blonde", "She", "no", "no", "no", "false"},
-				{"JO", "red", "She", "hat", "glasses", "no", "false"},
-				{"HARRY", "brown", "He", "no", "glasses", "beard", "false"},
-				{"MARIA", "black", "She", "hat", "no", "no", "false"},
-				{"STANLEY", "black", "He", "no", "no", "no", "false"},
-				{"FRED", "brown", "He", "hat", "no", "no", "false"},
-				{"KARL", "black", "He", "no", "glasses", "no", "false"},
-				{"JOYCE", "brown", "She", "no", "no", "no", "false"},
-				{"ANTON", "red", "He", "no", "no", "beard", "false"}};
+		String[][] characterArray = {{"LEROY", "brown", "He", "hat", "glasses", "beard"}, 
+				{"SALLY", "blonde", "She", "no", "no", "no"},
+				{"JO", "red", "She", "no", "no", "no"},
+				{"TOM", "brown", "He", "hat", "glasses", "no"},
+				{"MARIA", "black", "She", "no", "no", "no"},
+				{"STAN", "brown", "He", "hat", "no", "no"},
+				{"MARK", "brown", "He", "no", "no", "no"},
+				{"HOPE", "brown", "She", "hat", "glasses", "beard"},
+				{"TISHA", "black", "She", "hat", "glasses", "no"},
+				{"DAISY", "red", "She", "hat", "no", "no"},
+				{"HOLLY", "brown", "She", "no", "no", "no"},
+				{"ANTONIO", "black", "He", "no", "glasses", "beard"},
+				{"LEXY", "red", "He", "no", "glasses", "no"},
+				{"GUY", "black", "He", "no", "no", "no"},
+				{"MARSHA", "brown", "She", "no", "glasses", "no"},
+				{"OLIVIA", "black", "She", "no", "no", "yes"},
+				{"LEANNA", "red", "She", "hat", "no", "no"},
+				{"SID", "brown", "He", "no", "no", "beard"},
+				{"VINNY", "blonde", "He", "no", "no", "beard"},
+				{"BUTCH", "blonde", "He", "no", "no", "no"},
+				};
+		
+
+		
+		// Questions the computer can ask.
+		String[] computerQuestionsArray = {
+			"Is your person a man?",
+			"Does your person have brown hair?",
+			"Does your person have a hat?",
+			"Does your person wear glasses?",
+			"Does your person have a beard?",
+			"Does your person have black hair?",
+			"Does your person have red hair?",
+			"I'm really confused. Are you sure you answered my questions honestly?"
+		};
+		int compTurnCounter = 0;
+		
+		// BEGIN GAME----------------------------------------------------------------------------
+		
+		// Initialize the game.
+		shuffleArray(characterArray);
 		
 		// Arrays to keep track of user and computer progress.
 		String[][] userArray = new String[characterArray.length][characterArray[0].length];
@@ -34,29 +70,52 @@ public class GuessWho {
 				computerArray[i][j] = characterArray[i][j];
 			}
 		}
-		
-		// Initialize the game.
-		shuffleArray(characterArray);
 		String[] userCharacter = characterArray[0];
 		String[] computerCharacter = characterArray[1];
 		String userQuestion = "";
 		printInstructions();
-		printUserCharacter(characterArray[0]);
 		
 		// Dev cheat
 		//System.out.println("The computer's character is " + computerCharacter[0]);
 		
 		// Loop the game until finished.
-		while(characterArray[1][6].equals("false")) {
-			userTurn(characterArray);
+		while(endGame == false) {
+			lastCharacterComputer(computerArray);
+			if (endGame == true) {
+				return;
+			}
+			printUserCharacter(userCharacter);
+			computerTurn(compTurnCounter, computerQuestionsArray, computerArray);
+			compTurnCounter++;
+			userTurn(userArray);
 		}
 	}
 	
 	/** Runs the computer's turn */
-	public static void computerTurn() {
+	public static void computerTurn(int turn, String[] qArray, String[][] array) {
 		Scanner input = new Scanner(System.in);
 		boolean turnComplete = false;
-		
+		String[] attributesArray = {"He", "brown", "hat", "glasses", "beard", "black", "red"};
+		int[] attributesOrderArray = {2, 1, 3, 4, 5, 1, 1};
+		while (turnComplete == false) {
+			System.out.print(qArray[turn] + " ");
+			String answer = input.next();
+			if (answer.equalsIgnoreCase("yes") || answer.equalsIgnoreCase("y")) 	{
+				// remove names of characters exhibiting that feature.
+				removeCharacters(attributesArray[turn], array, attributesOrderArray[turn], false);
+				turnComplete = true;
+			}
+			else if (answer.equalsIgnoreCase("no") || answer.equalsIgnoreCase("n")) {
+				// remove names not exhibiting that feature.
+				removeCharacters(attributesArray[turn], array, attributesOrderArray[turn], true);
+				turnComplete = true;
+			}
+			else {
+				System.out.println("Invalid input. Please answer Yes or No.");
+			}
+		}
+		//printAllRemainingCharacters(array);
+		//System.out.println();
 	}
 	
 	/** Runs the user's turn.*/
@@ -134,11 +193,29 @@ public class GuessWho {
 		System.out.println(array[2] + " has " + array[1] + " hair, " + hat + glasses + beard + "\n");
 	}
 	
+	/** Prints out name and attributes of user's character.*/
+	public static void printCharacter(String[] array) {
+		String hat = "does not wear a hat, ";
+		String glasses = "does not have glasses, ";
+		String beard = "and does not have a beard.";
+		if (array[3] == "hat") {
+			hat = "wears a hat, ";
+		}
+		if (array[4] == "glasses") {
+			glasses = "wears glasses, ";
+		}
+		if (array[5] == "beard") {
+			beard = "and has a beard.";
+		}
+		System.out.print(array[0] + ": ");
+		System.out.println(array[2] + " has " + array[1] + " hair, " + hat + glasses + beard + "\n");
+	}
+	
 	/** Removes characters from the board.*/
 	public static boolean checkAnswer(String[][] array, String question) {
 		if (question.equals(array[1][0] + "?")) {
-			System.out.println("You guessed correctly! The computer's character is " + array[1][0] + "!");
-			array[1][6] = "true";
+			System.out.println("You guessed correctly! The computer's character is " + question + "! You win!");
+			endGame = true;
 			return true;
 		}
 		else if (question.equals(array[2][0] + "?") || question.equals(array[3][0] + "?") || question.equals(array[4][0] + "?") || question.equals(array[5][0] + "?") || question.equals(array[6][0] + "?") || question.equals(array[7][0] + "?") || question.equals(array[8][0] + "?") || question.equals(array[9][0] + "?")) {
@@ -191,7 +268,7 @@ public class GuessWho {
 			else if (array[1][1].equalsIgnoreCase("brown") || array[1][1].equalsIgnoreCase("red") || array[1][1].equalsIgnoreCase("black")) {
 				System.out.println("No");
 				removeCharacters("blonde", array, 1, true);
-				return false;
+				return true;
 			}
 		case "BLACK HAIR?": 
 			if (array[1][1].equalsIgnoreCase("black")) {
@@ -224,7 +301,7 @@ public class GuessWho {
 			else if (array[1][4].equalsIgnoreCase("no")) {
 				System.out.println("No");
 				removeCharacters("glasses", array, 4, true);
-				return false;
+				return true;
 			}
 		case "HAT?": 
 			if (array[1][3].equalsIgnoreCase("hat")) {
@@ -235,7 +312,7 @@ public class GuessWho {
 			else if (array[1][3].equalsIgnoreCase("no")) {
 				System.out.println("No");
 				removeCharacters("hat", array, 3, true);
-				return false;
+				return true;
 			}
 		case "BEARD?": 
 			if (array[1][5].equalsIgnoreCase("beard")) {
@@ -246,7 +323,7 @@ public class GuessWho {
 			else if (array[1][5].equalsIgnoreCase("no")) {
 				System.out.println("No");
 				removeCharacters("beard", array, 5, true);
-				return false;
+				return true;
 			}
 		case "INSTRUCTIONS":
 			printInstructions();
@@ -254,6 +331,17 @@ public class GuessWho {
 			
 		case "HELP":
 			printInstructions();
+			return false;
+			
+		case "LIST ATTRIBUTES":
+			for (int i = 0; i < array.length; i++) {
+					if (array[i][0].equals("")) {
+						// do nothing
+					}
+					else {
+						printCharacter(array[i]);
+					}
+				}
 			return false;
 		}
 		System.out.println("Invalid input. Please try again.");
@@ -268,5 +356,39 @@ public class GuessWho {
 			}
 		}
 		System.out.println();
+	}
+	
+	public static void lastCharacterComputer(String[][] array) {
+		Scanner input = new Scanner(System.in);
+		boolean turnComplete = false;
+		int counter = 0;
+		String character = "";
+		for (int i = 0; i < array.length; i++) {
+			if (array[i][0].equals("")) {
+				// do nothing
+			}
+			else {
+				character = array[i][0];
+				counter++;
+			}
+		}
+		if (counter == 1) {
+			// guess character
+			System.out.print("Is your character " + character + "? ");
+			String answer = input.next();
+			if (answer.equalsIgnoreCase("yes") || answer.equalsIgnoreCase("y")) {
+				System.out.println("Computer wins!");
+				endGame = true;
+				turnComplete = true;
+			}
+			else if (answer.equalsIgnoreCase("no") || answer.equalsIgnoreCase("n")) {
+				// do nothing
+				turnComplete = true;
+			}
+			else {
+				System.out.println("Invalid input. Please answer Yes or No.");
+				lastCharacterComputer(array);
+			}
+		}
 	}
 }
