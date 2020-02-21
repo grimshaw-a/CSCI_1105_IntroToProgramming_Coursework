@@ -1,4 +1,4 @@
-# Project Title
+# GUESS WHO?
 
 ## Synopsis
 This is a text based version of the classic board game Guess Who?
@@ -18,7 +18,6 @@ public static void removeCharacters(String attribute, String[][] array, int arra
 			array[i][0] = "";
 		}
 	}
-	System.out.println();
 }		
 ```
 
