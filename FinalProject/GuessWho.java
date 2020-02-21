@@ -1,18 +1,24 @@
 /**
  * <p>This program is a text version of the Guess Who? game.</p>
- * <p>Created: 02.12.20</p>
+ * <p>Created: 02.21.20</p>
  * @author Adam Grimshaw
  *
  */
 
+package finalProject;
+
 import java.util.Scanner;
 import java.util.Arrays;
 import java.util.jar.*;
+import javax.tools.*;
 
 public class GuessWho {
 
 	static boolean endGame = false;
 
+	/** This is the main method of the program. It defines characters and attributes, sets up and begins the game.
+	 * @param args (String[]; this parameter is not used)
+	 * */
 	public static void main(String[] args) {
 		Scanner input = new Scanner(System.in);
 		
@@ -28,20 +34,18 @@ public class GuessWho {
 				{"MARK", "brown", "He", "no", "no", "no"},
 				{"HOPE", "brown", "She", "hat", "glasses", "beard"},
 				{"TISHA", "black", "She", "hat", "glasses", "no"},
-				{"DAISY", "red", "She", "hat", "no", "no"},
+				{"DAISY", "blonde", "She", "hat", "no", "no"},
 				{"HOLLY", "brown", "She", "no", "no", "no"},
 				{"ANTONIO", "black", "He", "no", "glasses", "beard"},
 				{"LEXY", "red", "He", "no", "glasses", "no"},
 				{"GUY", "black", "He", "no", "no", "no"},
 				{"MARSHA", "brown", "She", "no", "glasses", "no"},
-				{"OLIVIA", "black", "She", "no", "no", "yes"},
+				{"OLIVIA", "black", "She", "no", "no", "beard"},
 				{"LEANNA", "red", "She", "hat", "no", "no"},
 				{"SID", "brown", "He", "no", "no", "beard"},
 				{"VINNY", "blonde", "He", "no", "no", "beard"},
 				{"BUTCH", "blonde", "He", "no", "no", "no"},
 				};
-		
-
 		
 		// Questions the computer can ask.
 		String[] computerQuestionsArray = {
@@ -54,11 +58,14 @@ public class GuessWho {
 			"Does your person have red hair?",
 			"I'm really confused. Are you sure you answered my questions honestly?"
 		};
+		
+		// Counter to track progression through computer's questions.
 		int compTurnCounter = 0;
+		
 		
 		// BEGIN GAME----------------------------------------------------------------------------
 		
-		// Initialize the game.
+		// Initialize the game board. Selects random character for user and computer.
 		shuffleArray(characterArray);
 		
 		// Arrays to keep track of user and computer progress.
@@ -91,7 +98,11 @@ public class GuessWho {
 		}
 	}
 	
-	/** Runs the computer's turn */
+	/** Runs the computer's turn 
+	 * @param turn (int; counter for how many turns the computer has had)
+	 * @param qArray (String[]; feeds method questions to ask)
+	 * @param array (String[][]; provides method with array of characters names and attributes)
+	 * */
 	public static void computerTurn(int turn, String[] qArray, String[][] array) {
 		Scanner input = new Scanner(System.in);
 		boolean turnComplete = false;
@@ -118,7 +129,9 @@ public class GuessWho {
 		//System.out.println();
 	}
 	
-	/** Runs the user's turn.*/
+	/** Runs the user's turn.
+	 * @param array (String[][]; provides method with array of characters names and attributes)
+	 * */
 	public static void userTurn(String[][] array) {
 		Scanner input = new Scanner(System.in);
 		boolean turnComplete = false;
@@ -126,11 +139,14 @@ public class GuessWho {
 		while(turnComplete == false) {
 			System.out.print("Your turn. Enter a question: ");
 			String question = input.nextLine();
-			turnComplete = checkAnswer(array, question.toUpperCase());
+			turnComplete = checkQuestion(array, question.toUpperCase());
 		}
 	}
 	
-	/** Creates a random variable and swaps array elements to randomize their order.*/
+	/** Creates a random variable and swaps array elements to randomize their order.
+	 * @param array (String[][]; any two tier array to be shuffled)
+	 * @return array (String[][]; returns shuffled array)
+	 * */
 	public static String[][] shuffleArray(String[][] array) {
 		for (int i = 0; i < array.length; i++) {
 			int j = (int)(Math.random() * (i + 1));
@@ -147,14 +163,17 @@ public class GuessWho {
 					+ "assigned a character. The goal is to guess the computer's character before "
 					+ "it guesses yours.\nYou will be given the name and attributes of your "
 					+ "character. Answer the computer's questions by typing either \"YES\" or "
-					+ "\"NO\".\n\nTo ask the computer a question, type one of the "
+					+ "\"NO\".\n\nOn your turn, ask the computer a question by typing one of the "
 					+ "following:\n\"MAN?\", \"WOMAN?\", \"BROWN HAIR?\", \"BLONDE HAIR?\", "
 					+ "\"BLACK HAIR?\", \"RED HAIR?\", \"GLASSES?\", \"HAT?\", \"BEARD?\", or "
-					+ "\"(NAME OF CHARACTER)?\"\n\n"
+					+ "\"(NAME OF CHARACTER)?\"\n\nFor a list of character attributes, type \"LIST ATTRIBUTES\". "
+					+ "To see these instructions again, type \"INSTRUCTIONS\" or \"HELP\".\n\n"
 					+ "The computer will go first. HAVE FUN!\n-------------------------------------\n\n");
 	}
 	
-	/** Prints out a list of all characters.*/
+	/** Prints out a list of names of all the characters remaining on the user's board.
+	 * @param array (String[][]; feeds method array of characters names and attributes)
+	 * */
 	public static void printAllRemainingCharacters(String[][] array) {
 		System.out.println("The following characters are on the board:");
 		// Creates a new array with the names in alphabetical order, so the user can't cheat.
@@ -175,7 +194,9 @@ public class GuessWho {
 		System.out.print("\n\n");
 	}
 	
-	/** Prints out name and attributes of user's character.*/
+	/** Prints out name and attributes of user's character.
+	 * @param array (String[]; feeds method an array of a single character's name and attributes)
+	 * */
 	public static void printUserCharacter(String[] array) {
 		String hat = "does not wear a hat, ";
 		String glasses = "does not have glasses, ";
@@ -193,7 +214,9 @@ public class GuessWho {
 		System.out.println(array[2] + " has " + array[1] + " hair, " + hat + glasses + beard + "\n");
 	}
 	
-	/** Prints out name and attributes of user's character.*/
+	/** Prints out name and attributes of any character. Used for listing the attributes of all remaining characters.
+	 * @param array (String[]; feeds method an array of a single character's name and attributes)
+	 * */
 	public static void printCharacter(String[] array) {
 		String hat = "does not wear a hat, ";
 		String glasses = "does not have glasses, ";
@@ -211,20 +234,27 @@ public class GuessWho {
 		System.out.println(array[2] + " has " + array[1] + " hair, " + hat + glasses + beard + "\n");
 	}
 	
-	/** Removes characters from the board.*/
-	public static boolean checkAnswer(String[][] array, String question) {
+	/** Checks the user's question to see if it is valid. Then calls the removeCharacters method or ends the game.
+	 * @param array (String[][]; feeds method an array of characters names and attributes)
+	 * @param question (String; user's input)
+	 * @return val (boolean; returns true if the input is valid AND if the program should not request the user to input another question.)
+	 * */
+	public static boolean checkQuestion(String[][] array, String question) {
+		// If a name is entered, this checks to see if the name is the computer's character or if it is a valid name/entry.
 		if (question.equals(array[1][0] + "?")) {
-			System.out.println("You guessed correctly! The computer's character is " + question + "! You win!");
+			question = question.substring(0, question.length() - 1);
+			System.out.println("You guessed correctly! The computer's character is " + question + ". You win!");
 			endGame = true;
 			return true;
 		}
-		else if (question.equals(array[2][0] + "?") || question.equals(array[3][0] + "?") || question.equals(array[4][0] + "?") || question.equals(array[5][0] + "?") || question.equals(array[6][0] + "?") || question.equals(array[7][0] + "?") || question.equals(array[8][0] + "?") || question.equals(array[9][0] + "?")) {
+		else if (question.equals(array[2][0] + "?") || question.equals(array[3][0] + "?") || question.equals(array[4][0] + "?") || question.equals(array[5][0] + "?") || question.equals(array[6][0] + "?") || question.equals(array[7][0] + "?") || question.equals(array[8][0] + "?") || question.equals(array[9][0] + "?") || question.equals(array[10][0] + "?") || question.equals(array[11][0] + "?") || question.equals(array[12][0] + "?") || question.equals(array[13][0] + "?") || question.equals(array[14][0] + "?") || question.equals(array[15][0] + "?") || question.equals(array[16][0] + "?") || question.equals(array[17][0] + "?") || question.equals(array[18][0] + "?") || question.equals(array[19][0] + "?")) {
 			System.out.println("No");
 			// Removes "?" from string before feeding to removeCharacters method.
 			question = question.substring(0, question.length() - 1);
 			removeCharacters(question, array, 0, true);
 			return true;
 		}
+		// All other valid entries are defined in this switch.
 		switch (question) {
 		case "MAN?": 
 			if (array[1][2].equalsIgnoreCase("He")) {
@@ -343,12 +373,28 @@ public class GuessWho {
 					}
 				}
 			return false;
+		case "LIST":
+			System.out.println();
+			for (int i = 0; i < array.length; i++) {
+					if (array[i][0].equals("")) {
+						// do nothing
+					}
+					else {
+						printCharacter(array[i]);
+					}
+				}
+			return false;
 		}
 		System.out.println("Invalid input. Please try again.");
 		return false;
 	}
 	
-	/** Removes characters from user/computer array.*/
+	/** Removes characters from user/computer array.
+	 * @param attribute (String; attribute to search for in array)
+	 * @param array (String[][]; array to be searched)
+	 * @param arrayIndex (int; which part of the array to be searched)
+	 * @param bool (boolean; defines if all characters expressing that attribute should have their names kept or eliminated from the array)
+	 * */
 	public static void removeCharacters(String attribute, String[][] array, int arrayIndex, boolean bool) {
 		for(int i = 0; i < array.length; i++) {
 			if(array[i][arrayIndex].equals(attribute) == bool) {
@@ -358,6 +404,10 @@ public class GuessWho {
 		System.out.println();
 	}
 	
+	/** Checks the computer's array of characters to see if only one character is left. If so, it guesses that character. 
+	 * The game ends either with a win for the computer or an accusation of cheating.
+	 * @param array (String[][]; array to search for character name)
+	 * */
 	public static void lastCharacterComputer(String[][] array) {
 		Scanner input = new Scanner(System.in);
 		boolean turnComplete = false;
@@ -382,7 +432,9 @@ public class GuessWho {
 				turnComplete = true;
 			}
 			else if (answer.equalsIgnoreCase("no") || answer.equalsIgnoreCase("n")) {
-				// do nothing
+				System.out.println("Really?! I'm pretty sure your person is " + character + ".");
+				System.out.println("\nNobody wins when somebody cheats.\nGAME OVER");
+				endGame = true;
 				turnComplete = true;
 			}
 			else {
