@@ -11,7 +11,7 @@ This repository contains examples of my work from the Introduction to Programmin
 
 ### Personal Bio
 
-- Software Development student at Southwest Technical college.
+- Software Development student at Southwest Technical College
 - Commercial Photographer 2010-Present
   - Specialty in product and interiors. High level post-production.
 
