@@ -1,13 +1,13 @@
-## CSCI 1105 Introduction To Programming Coursework
+## CSCI 1105: Introduction To Programming Coursework
 
-Date: December 2019
-Student: Adam Grimshaw
-School: Southwest Technical College
-Program: Software Development
+<p>Date: December 2019 </p>
+<p>Student: Adam Grimshaw </p>
+<p>School: Southwest Technical College </p>
+<p>Program: Software Development </p>
 
 ### Repository Description
 
-This repository contains examples of my work from the Introduction to Programming class. This includes exercises assigned for each topic, as well as a final project proposed by the student. Topics for this course included progragm design, console output, loops, methods, arrays, JavaDocs, and unit testing.
+This repository contains examples of my work from the Introduction to Programming class. This includes exercises assigned for each topic, as well as a final project proposed by the student. Topics for this course included program design, console output, loops, methods, arrays, JavaDocs, and unit testing.
 
 ### Personal Bio
 
