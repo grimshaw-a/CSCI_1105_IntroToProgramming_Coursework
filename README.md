@@ -1,9 +1,9 @@
 ## CSCI 1105: Introduction To Programming Coursework
 
+<p>Programming Language: Java </p>
 <p>Date: December 2019 </p>
 <p>Student: Adam Grimshaw </p>
 <p>School: Southwest Technical College </p>
-<p>Program: Software Development </p>
 
 ### Repository Description
 
